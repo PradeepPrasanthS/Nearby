@@ -34,7 +34,7 @@ class NearbyPlacesActivity : AppCompatActivity() {
         val requestQueue = Volley.newRequestQueue(this)
 
         val url = "$BASE_URL?query=$QUERY&location=$lat,$lon&key=$KEY"
-        Log.e(TAG, "URL: $url")
+        Log.i(TAG, "URL: $url")
 
         val request =
             JsonObjectRequest(Request.Method.GET, url, null, { response ->
