@@ -21,6 +21,7 @@ class NearbyPlacesActivity : AppCompatActivity() {
         setContentView(R.layout.activity_nearby_places)
 
         val nearBy = findViewById<ListView>(R.id.nearbyPlaces)
+        nearByPlacesList = ArrayList()
 
         val extras = intent.extras
         extras?.let {
@@ -32,8 +33,9 @@ class NearbyPlacesActivity : AppCompatActivity() {
 
         val requestQueue = Volley.newRequestQueue(this)
 
-        val url = "https://maps.googleapis.com/maps/api/place/textsearch/json?query=&location=" +
-                "$lat,$lon&radius=10000&key=AIzaSyAg72yCWSbojIYhRq0-9G1cV5M66153yts"
+        val url = "$BASE_URL?query=$QUERY&location=$lat,$lon&key=$KEY"
+        Log.e(TAG, "URL: $url")
+
         val request =
             JsonObjectRequest(Request.Method.GET, url, null, { response ->
                 try {
@@ -45,18 +47,23 @@ class NearbyPlacesActivity : AppCompatActivity() {
                         val adapter = ArrayAdapter(
                             this,
                             android.R.layout.simple_list_item_1,
-                            name.toList()
+                            nearByPlacesList
                         )
                         nearBy.adapter = adapter
                     }
                 } catch (e: JSONException) {
-                    e.printStackTrace()
+                    Log.e(TAG, "Exception: $e")
                 }
-            }, { error -> error.printStackTrace() })
+            }, { error ->
+                Log.e(TAG, "Exception: $error")
+            })
         requestQueue?.add(request)
     }
 
     companion object {
         private const val TAG = "NearbyPlacesActivity"
+        private const val BASE_URL = "https://maps.googleapis.com/maps/api/place/textsearch/json"
+        private const val KEY = "AIzaSyBOCZwNtgZ6HiIYzVyc6jJ3JicoNYCi9Uc"
+        private const val QUERY = "restaurant"
     }
 }
